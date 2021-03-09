@@ -20,10 +20,11 @@
         .then(handleResponse) //handle the promise of method in handleResponse method
         .then(result=>{
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('token', JSON.stringify({
+            localStorage.setItem('user', JSON.stringify({
+                user : username,
                 token : result.token
             }));
-            console.warn(localStorage.getItem('token'));
+            console.warn(localStorage.getItem('user'));
         });
  }
 

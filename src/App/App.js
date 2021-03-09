@@ -7,8 +7,8 @@ import { authHeader } from '../helpers';
 class App extends Component{
 
     componentDidMount() {
+        //userService.login('kely','1234');
         console.warn("header", authHeader());
-       // userService.login('kely','1234');
     }
 
     render(){

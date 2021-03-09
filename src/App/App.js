@@ -1,23 +1,58 @@
 import React from 'react';
 import { Component } from 'react';
-import { userService } from '../services';
-import '../helpers';
-import { authHeader } from '../helpers';
+import { Router, Route, Switch, Redirect } from 'react-router';
+import { connect } from 'react-redux';
+
+import { history } from '../helpers';
+import { PrivateRoute } from '../components';
+import { alertActions } from '../actions';
+
+import { HomePage } from '../HomePage';
+import { LoginPage } from '../LoginPage';
+
 
 class App extends Component{
+    constructor(props) {
+        super(props);
 
-    componentDidMount() {
-        //userService.login('kely','1234');
-        console.warn("header", authHeader());
+        history.listen((location, action) => {
+            //clear alert on location change
+            this.props.clearAlerts();
+        });
     }
+  
 
     render(){
+        const { alert } = this.props;
         return(
-            <div>
-               
+            <div className = "container">
+                { alert.message && 
+                    <div className={ `alert ${alert.type}`}>{ alert.message }</div>
+                
+                }
+                <div>
+                    <Router history = { history }>
+                        <Switch>
+                            <PrivateRoute exact path = "/" component = { HomePage} />
+                            <Route path = "/login" component = { LoginPage } />
+                            <Redirect from="*" to="/" />
+                        </Switch>
+                    </Router>
+               </div>
             </div>
         );
     }
 }
 
-export default App;
+function mapState(state) {
+    const { alert } = state;
+    return { alert };
+}
+
+const actionCreators = {
+    clearAlerts: alertActions.clear
+};
+
+const connectedApp = connect(mapState, actionCreators) (App);
+
+export { connectedApp as App };
